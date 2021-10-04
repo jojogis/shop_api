@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,24 +13,73 @@ namespace shop_api.Controllers
     public class ProductsController : ControllerBase
     {
 
-        private readonly ILogger<ProductsController> _logger;
+        private readonly DataContext _context;
 
-        public ProductsController(ILogger<ProductsController> logger)
+        public ProductsController(DataContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpPost("Buy")]
-        public bool Buy(string id)
+        public bool Buy(int id)
         {
-            Product product = BD.Products().Where(product => product.Id == int.Parse(id)).First();
-            return product.Buy();
+            Product product = _context.Products.Find(id);
+            if (product == null) 
+                NotFound();
+            var result = product.Buy();
+            _context.SaveChanges();
+            return result;
         }
 
         [HttpGet]
-        public IEnumerable<Product> Get(string category)
+        public IEnumerable<Product> Index(string categorySlug)
         {
-            return BD.Products().Where(product => product.Category.Slug == category);
+            var category = _context.Categories.Include("Products").Where(c => c.Slug == categorySlug).FirstOrDefault();
+            if (category == null)
+                NotFound();
+
+            return category.Products;
+        }
+
+        [HttpGet("Get")]
+        public Product Get(int id)
+        {
+            Product product = _context.Products.Find(id);
+            if (product == null)
+                NotFound();
+            return product;
+        }
+
+        [HttpDelete]
+        public bool Delete(int id)
+        {
+            Product product = _context.Products.Find(id);
+            if (product == null)
+            {
+                NotFound();
+                return false;
+            }
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+            return true;
+        }
+
+        [HttpPut]
+        public bool Create(string title, int price, int weight, int stock, int categoryId)
+        {
+            Product product = new Product
+            {
+                Title = title,
+                CategoryId = categoryId,
+                Stock = stock,
+                Weight = weight,
+                Price = price
+            };
+
+            _context.Products.Add(product);
+            _context.SaveChanges();
+
+            return true;
         }
     }
 }

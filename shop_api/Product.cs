@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace shop_api
@@ -17,7 +18,10 @@ namespace shop_api
 
         public int Stock { get; set; }
 
-        public virtual Category Category{ get; set; }
+        [JsonIgnore]
+        public Category Category{ get; set; }
+
+        public int CategoryId { get; set; }
 
         public bool Buy() {
             if (Stock > 0)

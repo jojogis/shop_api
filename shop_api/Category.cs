@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace shop_api
 {
@@ -11,6 +12,7 @@ namespace shop_api
 
         public string Slug { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
+        [JsonIgnore]
+        public ICollection<Product> Products { get; set; }
     }
 }

@@ -1,45 +1,55 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace shop_api
 {
-    public static class BD
+    public static class DbInitializer
     {
-        public static IEnumerable<Category> Categories()
+        public static void Initialize(DataContext context)
         {
-            Category[] categories = {
-                 new Category
+            context.Database.EnsureCreated();
+            // Look for any students.
+            if (context.Categories.Any())
+            {
+                return;   // DB has been seeded
+                //context.Categories.RemoveRange(context.Categories);
+                //context.Products.RemoveRange(context.Products);
+                //context.SaveChanges();
+            }
+            var categories = new Category[] {
+                new Category
                 {
+                    Id = 1,
                     Title = "Игровые",
-                    Id = 0,
                     Slug = "gamers"
                 },
                 new Category
                 {
+                    Id = 2,
                     Title = "Офисные",
-                    Id = 1,
                     Slug = "office"
                 },
                 new Category
                 {
+                    Id = 3,
                     Title = "Для дизайна",
-                    Id = 2,
                     Slug = "design"
                 }
             };
-            return categories;
-        }
+            foreach (Category c in categories)
+            {
+                context.Categories.Add(c);
+            }
+            context.SaveChanges();
 
-        public static IEnumerable<Product> Products()
-        {
-            Product[] products = {
+            var products = new Product[] {
                 new Product
                 {
                     Title = "Монитор GamerX21",
-                    Id = 0,
-                    Category = Categories().ElementAt(0),
+                    CategoryId = 1,
                     Stock = 0,
                     Weight = 1000,
                     Price = 33000
@@ -47,8 +57,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор FreeRepublic",
-                    Id = 1,
-                    Category = Categories().ElementAt(0),
+                    CategoryId = 1,
                     Stock = 20,
                     Weight = 1500,
                     Price = 55000
@@ -56,8 +65,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор KDA",
-                    Id = 2,
-                    Category = Categories().ElementAt(0),
+                    CategoryId = 1,
                     Stock = 25,
                     Weight = 2000,
                     Price = 12770
@@ -65,8 +73,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор Olimp",
-                    Id = 3,
-                    Category = Categories().ElementAt(0),
+                    CategoryId = 1,
                     Stock = 5,
                     Weight = 1400,
                     Price = 52000
@@ -74,8 +81,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор HG-215",
-                    Id = 4,
-                    Category = Categories().ElementAt(1),
+                    CategoryId = 2,
                     Stock = 41,
                     Weight = 2400,
                     Price = 12000
@@ -83,8 +89,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор Work-099",
-                    Id = 5,
-                    Category = Categories().ElementAt(1),
+                    CategoryId = 2,
                     Stock = 1,
                     Weight = 1400,
                     Price = 14000
@@ -92,8 +97,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор Xt2017",
-                    Id = 6,
-                    Category = Categories().ElementAt(1),
+                    CategoryId = 2,
                     Stock = 11,
                     Weight = 1950,
                     Price = 19300
@@ -101,8 +105,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор UltraGraph",
-                    Id = 7,
-                    Category = Categories().ElementAt(2),
+                    CategoryId = 3,
                     Stock = 13,
                     Weight = 1250,
                     Price = 29300
@@ -110,8 +113,7 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор SharpView",
-                    Id = 8,
-                    Category = Categories().ElementAt(2),
+                    CategoryId = 3,
                     Stock = 333,
                     Weight = 4350,
                     Price = 140300
@@ -119,14 +121,18 @@ namespace shop_api
                 new Product
                 {
                     Title = "Монитор GM-graphic",
-                    Id = 9,
-                    Category = Categories().ElementAt(2),
+                    CategoryId = 3,
                     Stock = 3,
                     Weight = 3350,
                     Price = 81300
-                },
+                }
             };
-            return products;
+            foreach (Product p in products)
+            {
+                context.Products.Add(p);
+                context.SaveChanges();
+            }
+            
 
         }
 
