@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,6 +36,7 @@ namespace shop_api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public bool Delete(int id, bool deleteNotEmpty)
         {
             Category category = _context.Categories.Include("Products").FirstOrDefault(c => c.Id == id);
@@ -52,6 +54,7 @@ namespace shop_api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public bool Create(string name, string slug)
         {
             Category category = new Category

@@ -11,6 +11,7 @@ namespace shop_api
         public static void Initialize(DataContext context)
         {
             context.Database.EnsureCreated();
+            context.Database.Migrate();
             // Look for any students.
             if (context.Categories.Any())
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -51,6 +52,7 @@ namespace shop_api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public bool Delete(int id)
         {
             Product product = _context.Products.Find(id);
@@ -65,6 +67,7 @@ namespace shop_api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public bool Create(string title, int price, int weight, int stock, int categoryId)
         {
             Product product = new Product
